@@ -1,0 +1,78 @@
+### Variáveis
+@baseUrl = http://localhost:8080
+
+### 1. Registrar usuário ADMIN
+# @name registrar
+POST {{baseUrl}}/auth/registrar
+Content-Type: application/json
+
+{
+  "username": "admin1",
+  "password": "senha123",
+  "nome": "Administrador",
+  "email": "admin@agencia.com",
+  "perfil": "ADMIN"
+}
+
+### 2. Login
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin1",
+  "password": "senha123"
+}
+
+### 3. Listar destinos (usa o token da resposta do login acima)
+GET {{baseUrl}}/api/destinos
+Authorization: Bearer {{login.response.body.token}}
+
+### 4. Criar destino (requer ROLE_ADMIN)
+POST {{baseUrl}}/api/destinos
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+  "nome": "Rio de Janeiro",
+  "pais": "Brasil",
+  "descricao": "Cidade maravilhosa"
+}
+
+### 5. Buscar destino por id
+GET {{baseUrl}}/api/destinos/1
+Authorization: Bearer {{login.response.body.token}}
+
+### 6. Criar hotel vinculado a um destino
+POST {{baseUrl}}/api/hoteis
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+  "nome": "Hotel Copacabana",
+  "estrelas": 5,
+  "diaria": 450.0,
+  "vagasDisponiveis": 20,
+  "destino": { "id": 1 }
+}
+
+### 7. Listar hotéis de um destino
+GET {{baseUrl}}/api/hoteis/destino/1
+Authorization: Bearer {{login.response.body.token}}
+
+### 8. Criar pacote de viagem vinculado a um destino
+POST {{baseUrl}}/api/pacotes
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+  "nome": "Pacote Rio 5 dias",
+  "preco": 1200.0,
+  "dataInicio": "2026-10-01",
+  "dataFim": "2026-10-05",
+  "destino": { "id": 1 }
+}
+
+### 9. Listar pacotes de um destino
+GET {{baseUrl}}/api/pacotes/destino/1
+Authorization: Bearer {{login.response.body.token}}
